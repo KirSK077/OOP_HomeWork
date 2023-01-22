@@ -31,15 +31,21 @@ class Student:
                f' \n Курсы в процессе изучения: {", ".join(self.courses_in_progress)} ' \
                f' \n Завершенные курсы: {", ".join(self.finished_courses)}'
 
-    def compare_student(self, other):
+    def __eq__(self, other):
         if not isinstance(other, Student):
-            return 'Ошибка'
+            return 'Ошибка. Необходимо сравнивать данные студентов'
+        if type(self.average_hw_grade()) == str or type(other.average_hw_grade()) == str:
+            return f'Невозможно сравнить, один из студентов не имеет оценок'
+        if self.average_hw_grade() == other.average_hw_grade():
+            return f'Рейтинг успеваемости у обоих студентов одинаковый'
+
+    def __lt__(self, other):
+        if not isinstance(other, Student):
+            return 'Ошибка. Необходимо сравнивать данные студентов'
         if type(self.average_hw_grade()) == str or type(other.average_hw_grade()) == str:
             return f'Невозможно сравнить, один из студентов не имеет оценок'
         if self.average_hw_grade() > other.average_hw_grade():
             return f'Рейтинг успеваемости выше у студента: {self.name} {self.surname}'
-        elif self.average_hw_grade() == other.average_hw_grade():
-            return f'Рейтинг успеваемости у обоих студентов одинаковый'
         else:
             return f'Рейтинг успеваемости выше у студента: {other.name} {other.surname}'
 
@@ -70,15 +76,21 @@ class Lecturer(Mentor):
         return f' Имя: {self.name} \n Фамилия: {self.surname} ' \
                f' \n Средняя оценка за лекции: {self.average_grade()}'
 
-    def compare_lecturer(self, other):
+    def __eq__(self, other):
         if not isinstance(other, Lecturer):
-            return 'Ошибка'
+            return 'Ошибка. Необходимо сравнивать данные лекторов'
+        if type(self.average_grade()) == str or type(other.average_grade()) == str:
+            return f'Невозможно сравнить, один из лекторов не имеет оценок'
+        if self.average_grade() == other.average_grade():
+            return f'Рейтинг одобрения у обоих лекторов одинаковый'
+
+    def __lt__(self, other):
+        if not isinstance(other, Lecturer):
+            return 'Ошибка. Необходимо сравнивать данные лекторов'
         if type(self.average_grade()) == str or type(other.average_grade()) == str:
             return f'Невозможно сравнить, один из лекторов не имеет оценок'
         if self.average_grade() > other.average_grade():
             return f'Рейтинг одобрения студентами выше у лектора: {self.name} {self.surname}'
-        elif self.average_grade() == other.average_grade():
-            return f'Рейтинг одобрения у обоих лекторов одинаковый'
         else:
             return f'Рейтинг одобрения студентами выше у лектора: {other.name} {other.surname}'
 
@@ -127,7 +139,7 @@ reviewer_2.rate_hw(student_1, 'Python', 7)
 reviewer_2.rate_hw(student_2, 'JavaScript', 10)
 reviewer_2.rate_hw(student_2, 'JavaScript', 7)
 student_1.rate_lecturer(lecturer_1, 'Python', 8)
-student_2.rate_lecturer(lecturer_2, 'JavaScript', 10)
+student_2.rate_lecturer(lecturer_2, 'JavaScript', 9)
 
 students_list = [student_1, student_2]
 lecturer_list = [lecturer_1, lecturer_2]
@@ -161,9 +173,9 @@ print('Эксперты:')
 print(reviewer_1)
 print(reviewer_2)
 print('Сравнение успеваемости студентов:')
-print(student_1.compare_student(student_2))
+print(student_1 > student_2)
 print('Сравнение качества работы лекторов:')
-print(lecturer_1.compare_lecturer(lecturer_2))
+print(lecturer_1 > lecturer_2)
 print('Средняя оценка на курсах:')
 print(get_av_student_course_grade(students_list, 'JavaScript'))
 print(get_av_lecturer_course_grade(lecturer_list, 'Python'))
